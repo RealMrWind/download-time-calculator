@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Download Time Calculator</title>
+<meta name="description" content="Calculate how long a file, game, film or update will take to download based on file size and internet speed.">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f7fb;color:#182033}.wrap{max-width:820px;margin:auto;padding:24px}.hero{text-align:center;padding:55px 10px 30px}.hero h1{font-size:42px;margin:0 0 12px}.hero p{font-size:18px;color:#667085;margin:0}.card{background:#fff;border-radius:18px;padding:28px;margin:20px 0;box-shadow:0 8px 28px rgba(20,30,50,.08)}h2{margin-top:0}.grid{display:grid;grid-template-columns:1fr 150px;gap:14px}label{display:block;font-weight:700;margin:14px 0 7px}input,select{width:100%;padding:14px;border:1px solid #d7dce8;border-radius:10px;font-size:16px}button{border:0;border-radius:10px;padding:14px 16px;background:#182033;color:white;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:20px}.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.presets button{width:auto;margin:0;background:#eef1f6;color:#182033;font-size:14px}.result{display:none;text-align:center;margin-top:20px;padding:22px;border-radius:14px;background:#eef6ff}.result .time{font-size:38px;font-weight:800;margin:8px 0}.muted{color:#667085;line-height:1.55;font-size:14px}footer{text-align:center;color:#667085;font-size:13px;padding:25px}@media(max-width:600px){.hero h1{font-size:32px}.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+</style></head>
+<body><main class="wrap">
+<section class="hero"><h1>Download Time Calculator</h1><p>How long will your file, game or update take to download?</p></section>
+<section class="card"><h2>Calculate your download time</h2>
+<div class="grid"><div><label for="size">File size</label><input id="size" type="number" min="0" step="any" value="50"></div><div><label for="unit">Unit</label><select id="unit"><option>GB</option><option>MB</option><option>TB</option></select></div></div>
+<label for="speed">Internet speed</label><input id="speed" type="number" min="0" step="any" value="100"><label for="speedUnit">Speed unit</label><select id="speedUnit"><option>Mbps</option><option>Gbps</option><option>MB/s</option></select>
+<div class="presets"><button onclick="preset(5,'GB',100,'Mbps')">5 GB @ 100 Mbps</button><button onclick="preset(50,'GB',100,'Mbps')">50 GB @ 100 Mbps</button><button onclick="preset(100,'GB',500,'Mbps')">100 GB @ 500 Mbps</button></div>
+<button onclick="calculate()">Calculate download time</button>
+<div class="result" id="result"><div>Estimated download time</div><div class="time" id="time">—</div><div class="muted" id="details"></div></div>
+</section>
+<section class="card"><h2>Why isn't it exact?</h2><p class="muted">This gives a theoretical estimate. Actual downloads can take longer because of Wi‑Fi, network congestion, server limits and other overhead. Internet speeds are normally measured in bits per second, while file sizes are measured in bytes, so the calculator handles the conversion for you.</p></section>
+<footer>Free download time calculator • Runs in your browser</footer>
+</main>
+<script>
+function preset(s,u,v,su){document.getElementById('size').value=s;document.getElementById('unit').value=u;document.getElementById('speed').value=v;document.getElementById('speedUnit').value=su;calculate()}
+function secondsFrom(){let s=+document.getElementById('size').value,v=+document.getElementById('speed').value;if(!(s>0&&v>0))return null;let u=document.getElementById('unit').value,su=document.getElementById('speedUnit').value;let bytes=s*(u==='MB'?1e6:u==='GB'?1e9:1e12);let bps=su==='Mbps'?v*1e6:su==='Gbps'?v*1e9:v*8;return bytes*8/bps}
+function format(t){if(t<1)return 'Less than 1 second';if(t<60)return Math.round(t)+' seconds';let m=Math.floor(t/60),s=Math.round(t%60);if(m<60)return m+' min '+s+' sec';let h=Math.floor(m/60);m=m%60;if(h<24)return h+' hr '+m+' min';let d=Math.floor(h/24);h=h%24;return d+' day'+(d!==1?'s':'')+' '+h+' hr'}
+function calculate(){let t=secondsFrom();if(t===null){alert('Enter a file size and internet speed greater than 0.');return}document.getElementById('time').textContent=format(t);document.getElementById('details').textContent='Theoretical transfer time: '+format(t)+'. Real-world downloads may take longer.';document.getElementById('result').style.display='block'}
+calculate();
+</script></body></html>
